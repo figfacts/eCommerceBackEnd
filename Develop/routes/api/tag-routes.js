@@ -1,19 +1,17 @@
-// -----------------------------------------------------------------------------
-// Dependencies
-// -----------------------------------------------------------------------------
+
 const router = require('express').Router();  // Routing & middleware framework
 const { Tag, Product, ProductTag } = require('../../models');  // Models
 
 
-// -----------------------------------------------------------------------------
+
 // Routing: Get /api/tags - return all Tag records and linked Product records
-// -----------------------------------------------------------------------------
+
 router.get('/', async (req, res) => {
   try {
     const tagData = await Tag.findAll({
       include: [{ model: Product }],
     });
-    if (!tagData) res.status(404).json({ message: 'No tags were found.' });
+    if (!tagData) res.status(404).json({ message: 'No tags exist.' });
     res.status(200).json(tagData);
   } catch (err) {
     res.status(500).json(err);
@@ -21,15 +19,15 @@ router.get('/', async (req, res) => {
 });
 
 
-// -----------------------------------------------------------------------------
+
 // Routing: Get /api/tag/:id - return requested Tag record and linked Product records
-// -----------------------------------------------------------------------------
+
 router.get('/:id', async (req, res) => {
   try {
     const tagData = await Tag.findByPk(req.params.id, {
       include: [{ model: Product }],
     });
-    if (!tagData) res.status(404).json({ message: `Requested tag: ${req.params.id} was not found.` });
+    if (!tagData) res.status(404).json({ message: `The requested tag: ${req.params.id} does not exist.` });
     res.status(200).json(tagData);
   } catch (err) {
     res.status(500).json(err);
@@ -37,9 +35,8 @@ router.get('/:id', async (req, res) => {
 });
 
 
-// -----------------------------------------------------------------------------
 // Routing: Post /api/tag - add Tag record
-// -----------------------------------------------------------------------------
+
 router.post('/', async (req, res) => {
   try {
     const tagData = await Tag.create({
@@ -52,9 +49,9 @@ router.post('/', async (req, res) => {
 });
 
 
-// -----------------------------------------------------------------------------
+
 // Routing: Put /api/tag/:id - update requested Tag record
-// -----------------------------------------------------------------------------
+
 router.put('/:id', async (req, res) => {
   // update a tag's name by its `id` value
   try {
@@ -65,7 +62,7 @@ router.put('/:id', async (req, res) => {
     });
 
     if (!tagData) {
-      res.status(404).json({ message: `Tag: ${req.params.id} not found.` });
+      res.status(404).json({ message: `Tag: ${req.params.id} does not exist.` });
       return;
     }
 
@@ -76,9 +73,9 @@ router.put('/:id', async (req, res) => {
 });
 
 
-// -----------------------------------------------------------------------------
-// Routing: Delete /api/tag/:id - delete requested Tag record
-// -----------------------------------------------------------------------------
+
+// Routing: Delete /api/tag/:id - delete what tag the user requested 
+
 router.delete('/:id', async (req, res) => {
   // delete on tag by its `id` value
   try {
@@ -89,7 +86,7 @@ router.delete('/:id', async (req, res) => {
     });
 
     if (!tagData) {
-      res.status(404).json({ message: `Tag: ${req.params.id} not found.` });
+      res.status(404).json({ message: `Tag: ${req.params.id} does not exist.` });
       return;
     }
 
@@ -100,7 +97,4 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-// -----------------------------------------------------------------------------
-// Module Exports
-// -----------------------------------------------------------------------------
 module.exports = router;

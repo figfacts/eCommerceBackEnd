@@ -7,10 +7,10 @@ router.get('/', async(req, res) => {
   // find all categories
   // be sure to include its associated Products
   try {
-    const categoryData = await Category.findAll(req.body,{
+    const categoryData = await Category.findAll({
       include: [{ model: Product }],
     });
-    if (!categoryData) res.status(404).json({ message: 'No categories were found.' });
+    if (!categoryData) res.status(404).json({ message: 'No categories exist.' });
     res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
@@ -24,7 +24,7 @@ router.get('/:id', async(req, res) => {
     const categoryData = await Category.findByPk(req.params.id, {
       include: [{ model: Product }],
     });
-    if (!categoryData) res.status(404).json({ message: `Requested category: ${req.params.id} was not found.` });
+    if (!categoryData) res.status(404).json({ message: `The requested category: ${req.params.id} does not exist.` });
     res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
@@ -46,14 +46,14 @@ router.post('/', async(req, res) => {
 router.put('/:id', async(req, res) => {
   // update a category by its `id` value
   try {
-    const categoryData = await Category.update({
+    const categoryData = await Category.update(req.body,{
       where: {
         id: req.params.id,
-      },
+      }
     });
 
-    if (!catalogData) {
-      res.status(404).json({ message: `Category: ${req.params.id} not found.` });
+    if (!categoryData) {
+      res.status(404).json({ message: `Category: ${req.params.id} does not exist.` });
       return;
     }
 
@@ -73,7 +73,7 @@ router.delete('/:id', async(req, res) => {
     });
 
     if (!categoryData) {
-      res.status(404).json({ message: `Category: ${req.params.id} not found.` });
+      res.status(404).json({ message: `Category: ${req.params.id} does not exist.` });
       return;
     }
 
